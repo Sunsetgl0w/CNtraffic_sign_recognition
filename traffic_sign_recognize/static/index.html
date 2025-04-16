@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能交通标志识别系统</title>
+    <link rel="stylesheet" href="static/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>智能交通标志识别系统</h1>
+
+        <!-- 数据看板 -->
+        <div class="dashboard" id="dashboard">
+            <div class="stat-card">
+                <h3>总检测数</h3>
+                <div class="stat-value" id="totalDetections">0</div>
+                <div class="stat-label">累计检测的交通标志数量</div>
+            </div>
+            <div class="stat-card detection">
+                <h3>当日检测</h3>
+                <div class="stat-value" id="dailyDetections">0</div>
+                <div class="stat-label">今日检测的交通标志数量</div>
+            </div>
+            <div class="stat-card question">
+                <h3>总问答数</h3>
+                <div class="stat-value" id="totalQuestions">0</div>
+                <div class="stat-label">累计解答的交通问题</div>
+            </div>
+            <div class="stat-card update">
+                <h3>最后更新</h3>
+                <div class="stat-value" id="lastUpdate">-</div>
+                <div class="stat-label">数据更新时间</div>
+            </div>
+        </div>
+
+        <div id="status" class="disconnected">状态: 未连接</div>
+        <div class="performance" id="performanceInfo"></div>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="openTab('imageTab')">图片识别</button>
+            <button class="tab" onclick="openTab('videoTab')">视频识别</button>
+        </div>
+
+        <div id="imageTab" class="tab-content active">
+            <div class="file-input-container">
+                <label for="imageInput" class="file-input-label">选择图片</label>
+                <span id="imageFileName" class="file-name">未选择文件</span>
+                <input type="file" id="imageInput" class="file-input" accept="image/*">
+            </div>
+            <div class="action-buttons">
+                <button class="btn" onclick="startDetection()">检测标志</button>
+            </div>
+
+            <h2>原始图片</h2>
+            <img id="imagePreview">
+
+            <h2>检测结果</h2>
+            <img id="resultImage">
+        </div>
+
+        <div id="videoTab" class="tab-content">
+            <div class="file-input-container">
+                <label for="videoInput" class="file-input-label">选择视频</label>
+                <span id="videoFileName" class="file-name">未选择文件</span>
+                <input type="file" id="videoInput" class="file-input" accept="video/*">
+            </div>
+            <div class="action-buttons">
+                <button class="btn" onclick="processVideo()">处理视频</button>
+                <button class="btn btn-warning" onclick="stopVideoProcessing()" id="stopBtn" style="display: none;">停止处理</button>
+            </div>
+
+            <div class="video-container">
+                <h2>原始视频</h2>
+                <video id="videoPreview" controls></video>
+
+                <h2>检测结果</h2>
+                <canvas id="videoCanvas"></canvas>
+                <progress id="videoProgress" value="0" max="100"></progress>
+            </div>
+        </div>
+
+        <div class="detection-results" id="detectionResults" style="display: none;">
+            <h3>检测到的对象</h3>
+            <div id="detectionList"></div>
+            <div id="signDetails"></div>
+        </div>
+
+        <div class="history-container">
+            <div class="history-header">
+                <h3>历史检测记录</h3>
+                <div class="history-controls">
+                    <input type="text" id="historySearch" class="history-search" placeholder="搜索标志...">
+                    <button class="btn btn-secondary" onclick="searchHistory()">搜索</button>
+                    <button class="btn" onclick="loadHistory(true)">刷新</button>
+                </div>
+            </div>
+            <div class="history-list" id="historyList">
+                <div class="no-history">暂无历史记录</div>
+            </div>
+        </div>
+
+        <div class="chat-container">
+            <h3>交通知识咨询</h3>
+            <div class="chat-box" id="chatBox"></div>
+            <div style="margin-top: 10px;">
+                <input type="text" id="questionInput" placeholder="输入交通相关问题...">
+                <button class="btn btn-secondary" onclick="askQuestion()">提问</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="voiceControl" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
+        <button id="toggleVoiceBtn" class="btn" style="border-radius: 50%; width: 50px; height: 50px;">
+            <span id="voiceIcon">🔊</span>
+        </button>
+        <div id="voiceStatus" style="font-size: 12px; text-align: center;">语音开启</div>
+    </div>
+
+    <div id="imageModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <img id="modalImage" style="max-width: 100%;">
+        </div>
+    </div>
+
+    <script src="static/js/index.js"></script>
+</body>
+</html>
